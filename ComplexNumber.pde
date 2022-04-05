@@ -45,11 +45,11 @@ class ComplexNumber {
     return new ComplexNumber(this.real, -this.imaginary);
   }
 
-  float absoluteValue() {
+  float abs() {
     return sqrt(this.real * this.real + this.imaginary * this.imaginary);
   }
 
-  String format() {
-    return str(this.real) + (this.imaginary >= 0 ? " + " : " - ") + str(abs(this.imaginary)) + "i";
+  String toString() {
+    return this.real + (this.imaginary >= 0 ? " + " : " - ") + Math.abs(this.imaginary) + "i";
   }
 }
