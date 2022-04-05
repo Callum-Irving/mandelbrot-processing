@@ -1,8 +1,8 @@
 class ComplexNumber {
-  float real;
-  float imaginary;
+  double real;
+  double imaginary;
 
-  ComplexNumber(float r, float i) {
+  ComplexNumber(double r, double i) {
     this.real = r;
     this.imaginary = i;
   }
@@ -11,7 +11,7 @@ class ComplexNumber {
     return new ComplexNumber(this.real + other.real, this.imaginary + other.imaginary);
   }
 
-  ComplexNumber add(float n) {
+  ComplexNumber add(double n) {
     return new ComplexNumber(this.real + n, this.imaginary);
   }
 
@@ -19,7 +19,7 @@ class ComplexNumber {
     return new ComplexNumber(this.real - other.real, this.imaginary - other.imaginary);
   }
 
-  ComplexNumber sub(float n) {
+  ComplexNumber sub(double n) {
     return new ComplexNumber(this.real - n, this.imaginary);
   }
 
@@ -27,17 +27,17 @@ class ComplexNumber {
     return new ComplexNumber(this.real * other.real - this.imaginary * other.imaginary, this.real * other.imaginary + this.imaginary * other.real);
   }
 
-  ComplexNumber mul(float n) {
+  ComplexNumber mul(double n) {
     return new ComplexNumber(this.real * n, this.imaginary * n);
   }
 
   ComplexNumber div(ComplexNumber other) {
     ComplexNumber numerator = this.mul(other.conjugate());
-    float divisor = other.mul(other.conjugate()).real;
+    double divisor = other.mul(other.conjugate()).real;
     return numerator.div(divisor);
   }
 
-  ComplexNumber div(float n) {
+  ComplexNumber div(double n) {
     return new ComplexNumber(this.real / n, this.imaginary / n);
   }
 
@@ -45,8 +45,8 @@ class ComplexNumber {
     return new ComplexNumber(this.real, -this.imaginary);
   }
 
-  float abs() {
-    return sqrt(this.real * this.real + this.imaginary * this.imaginary);
+  double abs() {
+    return Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
   }
 
   String toString() {
