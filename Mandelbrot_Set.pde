@@ -2,34 +2,37 @@ float scale = 100;
 PVector offset = new PVector(0, 0);
 
 void setup() {
-  ComplexNumber z = new ComplexNumber(3, 4);
-  ComplexNumber w = new ComplexNumber(3, 2);
-
-  float c = z.abs();
-  println("z is", c, "units away from the origin");
-
-  ComplexNumber sum = z.add(w);
-  println("Sum is", sum);
-  
-  ComplexNumber d = new ComplexNumber(-2, 0);
-  println(inMandelbrot(d));
-  
   size(400, 400);
   // Center world 0,0
   offset = screenToWorld(PVector.sub(offset, new PVector(width/2, height/2)));
+
+  textSize(32);
+  fill(0, 255, 0);
+  stroke(0);
+  strokeCap(PROJECT);
 }
+
+int time;
+int elapsed;
 
 void draw() {
   background(255);
-  stroke(0);
+
+  time = millis();
+
+  loadPixels();
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       PVector w = screenToWorld(new PVector(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
       if (inMandelbrot(c))
-        point(x, y);
+        pixels[y * width + x] = color(0, 0, 0);
     }
+    updatePixels();
   }
+
+  elapsed = millis() - time;
+  text(elapsed, 10, 30);
 }
 
 PVector screenToWorld(PVector pos) {
