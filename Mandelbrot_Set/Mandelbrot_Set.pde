@@ -11,6 +11,7 @@ void setup() {
   fill(0, 255, 0);
   stroke(0);
   strokeCap(PROJECT);
+  colorMode(HSB);
 }
 
 int time;
@@ -26,8 +27,7 @@ void draw() {
     for (int y = 0; y < height; y++) {
       Point w = screenToWorld(new Point(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
-      if (inMandelbrot(c))
-        pixels[y * width + x] = color(0, 0, 0);
+      pixels[y * width + x] = color(map(inMandelbrot(c), 0, NUM_ITERATIONS, 0, 255), 255, 255);
     }
     updatePixels();
   }
