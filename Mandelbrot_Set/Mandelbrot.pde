@@ -12,6 +12,11 @@ color binaryMandelbrotColor(int n) {
   else return color(255);
 }
 
+color simpleMandelbrotColor(int n) {
+  colorMode(HSB);
+  return color(map(n, 0, NUM_ITERATIONS, 0, 255), 255, 255);
+}
+
 color complexMandelbrotColor(int n) {
   float a = 0.1;
   float r = 0.5 * sin(a * n) + 0.5;

@@ -22,8 +22,8 @@ void draw() {
   //drawMandelbrotSimple();
 
   elapsed = millis() - time;
-  text(elapsed, 10, 30);
-  text("n = " + NUM_ITERATIONS, 10, 52);
+  text(elapsed + " ms", 10, 30);
+  text("n=" + NUM_ITERATIONS, 10, 62);
 }
 
 void drawMandelbrotSimple() {
