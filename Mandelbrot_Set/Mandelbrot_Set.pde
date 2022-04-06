@@ -8,10 +8,7 @@ void setup() {
   offset = screenToWorld(offset.sub(new Point(width/2, height/2)));
 
   textSize(32);
-  fill(0, 255, 0);
-  stroke(0);
-  strokeCap(PROJECT);
-  //colorMode(HSB);
+  fill(255, 0, 0);
 }
 
 int time;
@@ -22,6 +19,7 @@ void draw() {
   time = millis();
 
   drawMandelbrotThreaded();
+  //drawMandelbrotSimple();
 
   elapsed = millis() - time;
   text(elapsed, 10, 30);
@@ -34,18 +32,8 @@ void drawMandelbrotSimple() {
     for (int y = 0; y < height; y++) {
       Point w = screenToWorld(new Point(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
-
       int n = inMandelbrot(c);
-
-      // More complicated and cooler way but I don't understand it.
-      float a = 0.1;
-      float r = 0.5 * sin(a * n) + 0.5;
-      float g = 0.5 * sin(a * n + 2.094) + 0.5;
-      float b = 0.5 * sin(a * n + 4.188) + 0.5;
-      pixels[y * width + x] = color(r * 255, g * 255, b * 255);
-
-      // Simple but lame way. Uses HSB colours.
-      //pixels[y * width + x] = color(map(inMandelbrot(c), 0, NUM_ITERATIONS, 0, 255), 255, 255);
+      pixels[y * width + x] = complexMandelbrotColor(n);
     }
   }
   updatePixels();
