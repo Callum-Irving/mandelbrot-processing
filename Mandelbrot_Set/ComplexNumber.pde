@@ -1,6 +1,5 @@
 class ComplexNumber {
-  double real;
-  double imaginary;
+  double real, imaginary;
 
   ComplexNumber(double r, double i) {
     this.real = r;
@@ -11,34 +10,34 @@ class ComplexNumber {
     return new ComplexNumber(this.real + other.real, this.imaginary + other.imaginary);
   }
 
-  ComplexNumber add(double n) {
-    return new ComplexNumber(this.real + n, this.imaginary);
+  ComplexNumber add(double real) {
+    return new ComplexNumber(this.real + real, this.imaginary);
   }
 
   ComplexNumber sub(ComplexNumber other) {
     return new ComplexNumber(this.real - other.real, this.imaginary - other.imaginary);
   }
 
-  ComplexNumber sub(double n) {
-    return new ComplexNumber(this.real - n, this.imaginary);
+  ComplexNumber sub(double real) {
+    return new ComplexNumber(this.real - real, this.imaginary);
   }
 
-  ComplexNumber mul(ComplexNumber other) {
+  ComplexNumber mult(ComplexNumber other) {
     return new ComplexNumber(this.real * other.real - this.imaginary * other.imaginary, this.real * other.imaginary + this.imaginary * other.real);
   }
 
-  ComplexNumber mul(double n) {
-    return new ComplexNumber(this.real * n, this.imaginary * n);
+  ComplexNumber mult(double real) {
+    return new ComplexNumber(this.real * real, this.imaginary * real);
   }
 
   ComplexNumber div(ComplexNumber other) {
-    ComplexNumber numerator = this.mul(other.conjugate());
-    double divisor = other.mul(other.conjugate()).real;
+    ComplexNumber numerator = this.mult(other.conjugate());
+    double divisor = other.mult(other.conjugate()).real;
     return numerator.div(divisor);
   }
 
-  ComplexNumber div(double n) {
-    return new ComplexNumber(this.real / n, this.imaginary / n);
+  ComplexNumber div(double real) {
+    return new ComplexNumber(this.real / real, this.imaginary / real);
   }
 
   ComplexNumber conjugate() {

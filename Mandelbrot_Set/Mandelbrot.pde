@@ -1,7 +1,7 @@
 int inMandelbrot(ComplexNumber z) {
   ComplexNumber c = new ComplexNumber(z.real, z.imaginary);
   for (int i = 0; i < NUM_ITERATIONS; i++) {
-    z = z.mul(z).add(c);
+    z = z.mult(z).add(c);
     if (z.real * z.real + z.imaginary * z.imaginary > 4) return i;
   }
   return NUM_ITERATIONS;
@@ -10,6 +10,10 @@ int inMandelbrot(ComplexNumber z) {
 color binaryMandelbrotColor(int n) {
   if (n == NUM_ITERATIONS) return color(0);
   else return color(255);
+}
+
+color greyscaleMandelbrot(int n) {
+  return color(map(n, NUM_ITERATIONS, 0, 0, 255));
 }
 
 color simpleMandelbrotColor(int n) {
@@ -38,7 +42,7 @@ class MandelbrotThread implements Runnable {
   void run() {
     for (int x = xStart; x < xEnd; x++) {
       for (int y = yStart; y < yEnd; y++) {
-        Point w = screenToWorld(new Point(x, y));
+        Vec2 w = screenToWorld(new Vec2(x, y));
         ComplexNumber c = new ComplexNumber(w.x, w.y);
         int n = inMandelbrot(c);
         pixels[y * width + x] = complexMandelbrotColor(n);

@@ -1,27 +1,38 @@
 int NUM_ITERATIONS = 50;
 float scale = 100;
-Point offset = new Point(0, 0);
+Vec2 offset = new Vec2(0, 0);
 
 void setup() {
-  size(400, 400);
+  size(600, 600);
+
   // Center world 0,0
-  offset = screenToWorld(offset.sub(new Point(width/2, height/2)));
+  offset = screenToWorld(offset.sub(new Vec2(width/2, height/2)));
 
   textSize(32);
-  fill(255, 0, 0);
+  noFill();
 }
-
-int time;
-int elapsed;
 
 void draw() {
   background(255);
-  time = millis();
 
+  // Start frame timer.
+  int time = millis();
+
+  // Calculate and show Mandelbrot Set.
   drawMandelbrotThreaded();
-  //drawMandelbrotSimple();
 
-  elapsed = millis() - time;
+  // Stop frame timer.
+  int elapsed = millis() - time;
+
+  // Draw x-axis and y-axis.
+  Vec2 origin = worldToScreen(new Vec2(0, 0));
+  line(0, (float)origin.y, width, (float)origin.y);
+  line((float)origin.x, 0, (float)origin.x, height);
+
+  // Draw circle with radius 2
+  circle((float)origin.x, (float)origin.y, 4 * scale);
+
+  // Show frame time and number of iterations.
   text(elapsed + " ms", 10, 30);
   text("n=" + NUM_ITERATIONS, 10, 62);
 }
@@ -30,7 +41,7 @@ void drawMandelbrotSimple() {
   loadPixels();
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      Point w = screenToWorld(new Point(x, y));
+      Vec2 w = screenToWorld(new Vec2(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
       int n = inMandelbrot(c);
       pixels[y * width + x] = complexMandelbrotColor(n);
@@ -71,10 +82,10 @@ void mouseDragged() {
 
 void mouseWheel(MouseEvent e) {
   float amount = e.getCount();
-  Point prev = screenToWorld(mousePos());
+  Vec2 prev = screenToWorld(mousePos());
   if (amount > 0) scale *= 1.2;
   else if (amount < 0) scale /= 1.2;
-  Point current = screenToWorld(mousePos());
+  Vec2 current = screenToWorld(mousePos());
   offset = offset.add(prev.sub(current));
 }
 

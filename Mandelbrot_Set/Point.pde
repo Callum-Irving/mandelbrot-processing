@@ -1,37 +1,37 @@
 // This is like PVector but uses double instead of float
-class Point {
+class Vec2 {
   double x, y;
 
-  Point(double x, double y) {
+  Vec2(double x, double y) {
     this.x = x;
     this.y = y;
   }
 
-  Point mul(double m) {
-    return new Point(x * m, y * m);
+  Vec2 mul(double m) {
+    return new Vec2(x * m, y * m);
   }
 
-  Point div(double m) {
-    return new Point(x / m, y / m);
+  Vec2 div(double m) {
+    return new Vec2(x / m, y / m);
   }
 
-  Point add(Point o) {
-    return new Point(this.x + o.x, this.y + o.y);
+  Vec2 add(Vec2 o) {
+    return new Vec2(this.x + o.x, this.y + o.y);
   }
 
-  Point sub(Point o) {
-    return new Point(this.x - o.x, this.y - o.y);
+  Vec2 sub(Vec2 o) {
+    return new Vec2(this.x - o.x, this.y - o.y);
   }
 }
 
-Point screenToWorld(Point pos) {
+Vec2 screenToWorld(Vec2 pos) {
   return pos.div(scale).add(offset);
 }
 
-Point worldToScreen(Point pos) {
+Vec2 worldToScreen(Vec2 pos) {
   return pos.sub(offset).mul(scale);
 }
 
-Point mousePos() {
-  return new Point(mouseX, mouseY);
+Vec2 mousePos() {
+  return new Vec2(mouseX, mouseY);
 }
