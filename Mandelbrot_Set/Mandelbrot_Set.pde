@@ -11,7 +11,7 @@ void setup() {
   fill(0, 255, 0);
   stroke(0);
   strokeCap(PROJECT);
-  colorMode(HSB);
+  //colorMode(HSB);
 }
 
 int time;
@@ -19,22 +19,59 @@ int elapsed;
 
 void draw() {
   background(255);
-
   time = millis();
 
+  drawMandelbrotThreaded();
+
+  elapsed = millis() - time;
+  text(elapsed, 10, 30);
+  text("n = " + NUM_ITERATIONS, 10, 52);
+}
+
+void drawMandelbrotSimple() {
   loadPixels();
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       Point w = screenToWorld(new Point(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
-      pixels[y * width + x] = color(map(inMandelbrot(c), 0, NUM_ITERATIONS, 0, 255), 255, 255);
+
+      int n = inMandelbrot(c);
+
+      // More complicated and cooler way but I don't understand it.
+      float a = 0.1;
+      float r = 0.5 * sin(a * n) + 0.5;
+      float g = 0.5 * sin(a * n + 2.094) + 0.5;
+      float b = 0.5 * sin(a * n + 4.188) + 0.5;
+      pixels[y * width + x] = color(r * 255, g * 255, b * 255);
+
+      // Simple but lame way. Uses HSB colours.
+      //pixels[y * width + x] = color(map(inMandelbrot(c), 0, NUM_ITERATIONS, 0, 255), 255, 255);
     }
-    updatePixels();
+  }
+  updatePixels();
+}
+
+final int THREAD_COUNT = 4;
+void drawMandelbrotThreaded() {
+  loadPixels();
+
+  Thread[] threads = new Thread[THREAD_COUNT];
+  int sectionSize = width / THREAD_COUNT;
+  for (int i = 0; i < THREAD_COUNT; i ++) {
+    threads[i] = new Thread(new MandelbrotThread(i * sectionSize, 0, (i + 1) * sectionSize, height));
+    threads[i].start();
   }
 
-  elapsed = millis() - time;
-  text(elapsed, 10, 30);
-  text("n = " + NUM_ITERATIONS, 10, 52);
+  for (int i = 0; i < THREAD_COUNT; i++) {
+    try {
+      threads[i].join();
+    } 
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  updatePixels();
 }
 
 void mouseDragged() {
@@ -60,6 +97,7 @@ void keyPressed() {
     break;
   case DOWN:
     NUM_ITERATIONS -= 10;
+    NUM_ITERATIONS = max(10, NUM_ITERATIONS);
     break;
   }
 }
