@@ -1,16 +1,21 @@
 int NUM_ITERATIONS = 50;
 float scale = 100;
 Vec2 offset = new Vec2(0, 0);
+int drawMode = 1;
+boolean drawUi = true;
 
 void setup() {
-  size(600, 600);
+  size(1000, 1000);
 
   // Center world 0,0
   offset = screenToWorld(offset.sub(new Vec2(width/2, height/2)));
 
   textSize(32);
   noFill();
+
+  initPool();
 }
+
 
 void draw() {
   background(255);
@@ -19,22 +24,38 @@ void draw() {
   int time = millis();
 
   // Calculate and show Mandelbrot Set.
-  drawMandelbrotThreaded();
+  switch (drawMode) {
+  case 1:
+    drawMandelbrotSimple();
+    break;
+  case 2:
+    drawMandelbrotPool();
+    break;
+  case 3:
+    drawMandelbrotThreaded();
+    break;
+  }
 
   // Stop frame timer.
   int elapsed = millis() - time;
 
-  // Draw x-axis and y-axis.
-  Vec2 origin = worldToScreen(new Vec2(0, 0));
-  line(0, (float)origin.y, width, (float)origin.y);
-  line((float)origin.x, 0, (float)origin.x, height);
+  if (drawUi) {
+    // Draw x-axis and y-axis.
+    Vec2 origin = worldToScreen(new Vec2(0, 0));
+    line(0, (float)origin.y, width, (float)origin.y);
+    line((float)origin.x, 0, (float)origin.x, height);
 
-  // Draw circle with radius 2
-  circle((float)origin.x, (float)origin.y, 4 * scale);
+    // Draw circle with radius 2
+    circle((float)origin.x, (float)origin.y, 4 * scale);
 
-  // Show frame time and number of iterations.
-  text(elapsed + " ms", 10, 30);
-  text("n=" + NUM_ITERATIONS, 10, 62);
+    // Show frame time and number of iterations.
+    text(elapsed + " ms", 10, 30);
+    text("n=" + NUM_ITERATIONS, 10, 62);
+
+    // Show mouse coords
+    Vec2 mousePos = screenToWorld(mousePos());
+    text(nf((float)mousePos.x, 1, 4) + ", " + nf((float)mousePos.y, 1, 4), mouseX, mouseY);
+  }
 }
 
 void drawMandelbrotSimple() {
@@ -64,7 +85,7 @@ void drawMandelbrotThreaded() {
   for (int i = 0; i < THREAD_COUNT; i++) {
     try {
       threads[i].join();
-    } 
+    }
     catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -90,13 +111,30 @@ void mouseWheel(MouseEvent e) {
 }
 
 void keyPressed() {
-  switch (keyCode) {
-  case UP:
-    NUM_ITERATIONS += 10;
-    break;
-  case DOWN:
-    NUM_ITERATIONS -= 10;
-    NUM_ITERATIONS = max(10, NUM_ITERATIONS);
-    break;
+  if (key == CODED) {
+    switch (keyCode) {
+    case UP:
+      NUM_ITERATIONS += 10;
+      break;
+    case DOWN:
+      NUM_ITERATIONS -= 10;
+      NUM_ITERATIONS = max(10, NUM_ITERATIONS);
+      break;
+    }
+  } else {
+    switch (key) {
+    case '1':
+      drawMode = 1;
+      break;
+    case '2':
+      drawMode = 2;
+      break;
+    case '3':
+      drawMode = 3;
+      break;
+    case ' ':
+      drawUi = !drawUi;
+      break;
+    }
   }
 }
