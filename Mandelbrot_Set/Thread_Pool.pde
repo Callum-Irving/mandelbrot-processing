@@ -2,7 +2,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.CountDownLatch;
 
-int POOL_THREADS = 10;
+int POOL_THREADS = 8;
 color[] colors;
 
 ExecutorService pool;
@@ -53,15 +53,15 @@ class PoolThread implements Runnable {
   }
 
   void run() {
+    // TODO: Optimize screenToWorld calculations
     for (int x = xStart; x < xEnd; x++) {
       for (int y = yStart; y < yEnd; y++) {
         Vec2 w = screenToWorld(new Vec2(x, y));
         ComplexNumber c = new ComplexNumber(w.x, w.y);
         int n = inMandelbrot(c);
-        colors[y * width + x] = simpleMandelbrotColor(n);
+        colors[y * width + x] = precomputed[n];
       }
     }
-
     latch.countDown();
   }
 }

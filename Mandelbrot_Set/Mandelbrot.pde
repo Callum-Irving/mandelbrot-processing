@@ -7,29 +7,6 @@ int inMandelbrot(ComplexNumber z) {
   return NUM_ITERATIONS;
 }
 
-color binaryMandelbrotColor(int n) {
-  if (n == NUM_ITERATIONS) return color(0);
-  else return color(255);
-}
-
-color greyscaleMandelbrotColor(int n) {
-  return color(map(n, NUM_ITERATIONS, 0, 0, 255));
-}
-
-color simpleMandelbrotColor(int n) {
-  colorMode(HSB);
-  return color(map(n, 0, NUM_ITERATIONS, 0, 255), 255, 255);
-}
-
-color complexMandelbrotColor(int n) {
-  colorMode(RGB);
-  float a = 0.1;
-  float r = 0.5 * sin(a * n) + 0.5;
-  float g = 0.5 * sin(a * n + 2.094) + 0.5;
-  float b = 0.5 * sin(a * n + 4.188) + 0.5;
-  return color(r * 255, g * 255, b * 255);
-}
-
 class MandelbrotThread implements Runnable {
   int xStart, yStart, xEnd, yEnd;
 
@@ -41,12 +18,13 @@ class MandelbrotThread implements Runnable {
   }
 
   void run() {
+    double initX = xStart / scale + offset.x;
+    double initY = yStart / scale + offset.y;
     for (int x = xStart; x < xEnd; x++) {
       for (int y = yStart; y < yEnd; y++) {
-        Vec2 w = screenToWorld(new Vec2(x, y));
-        ComplexNumber c = new ComplexNumber(w.x, w.y);
+        ComplexNumber c = new ComplexNumber(x / scale + offset.x, y / scale + offset.y);
         int n = inMandelbrot(c);
-        pixels[y * width + x] = complexMandelbrotColor(n);
+        pixels[y * width + x] = precomputed[n];
       }
     }
   }

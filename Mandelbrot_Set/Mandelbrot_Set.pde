@@ -1,11 +1,11 @@
 int NUM_ITERATIONS = 50;
 float scale = 100;
 Vec2 offset = new Vec2(0, 0);
-int drawMode = 1;
+int drawMode = 2;
 boolean drawUi = true;
 
 void setup() {
-  size(1000, 1000);
+  size(600, 600);
 
   // Center world 0,0
   offset = screenToWorld(offset.sub(new Vec2(width/2, height/2)));
@@ -13,6 +13,7 @@ void setup() {
   textSize(32);
   noFill();
 
+  precomputeColors();
   initPool();
 }
 
@@ -65,13 +66,13 @@ void drawMandelbrotSimple() {
       Vec2 w = screenToWorld(new Vec2(x, y));
       ComplexNumber c = new ComplexNumber(w.x, w.y);
       int n = inMandelbrot(c);
-      pixels[y * width + x] = complexMandelbrotColor(n);
+      pixels[y * width + x] = precomputed[n];
     }
   }
   updatePixels();
 }
 
-final int THREAD_COUNT = 4;
+final int THREAD_COUNT = 8;
 void drawMandelbrotThreaded() {
   loadPixels();
 
@@ -115,10 +116,12 @@ void keyPressed() {
     switch (keyCode) {
     case UP:
       NUM_ITERATIONS += 10;
+      precomputeColors();
       break;
     case DOWN:
       NUM_ITERATIONS -= 10;
       NUM_ITERATIONS = max(10, NUM_ITERATIONS);
+      precomputeColors();
       break;
     }
   } else {
